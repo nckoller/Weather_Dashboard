@@ -3,8 +3,9 @@ const apiKey = "3e4d6f614ff0f8ef33d65fe860319afd";
 // DRAW THE PAGE
 function main() {
   // set LocalStorage var = const
-  const previousSearch = fetchLocalStorage();
-  const cityName = "minneapolis";
+  const previousCitiesArr = fetchLocalStorage();
+
+  const cityName = previousCitiesArr[0];
   // call weather API
   const queryURL = createQueryURL(cityName);
   fetchCityData(queryURL);
@@ -15,7 +16,12 @@ function main() {
 
 // RETRIEVES LAST CITY THAT WAS SEARCHED
 function fetchLocalStorage() {
-  return ["Minneapolis"];
+  const previousCitiesArr = JSON.parse(localStorage.getItem("previousCities"));
+  if (!previousCitiesArr) {
+    return ["Minneapolis"];
+  } else {
+    return previousCitiesArr;
+  }
 }
 
 function setLocalStorage() {
@@ -24,9 +30,14 @@ function setLocalStorage() {
 
 // RETRIEVES INPUT FROM THE SEARCH BAR
 function searchCity(e) {
-  console.log("e", e);
   const newCity = $("#searchInput").val();
+  if (newCity === "") {
+    return;
+  }
+  updatePreviousCitiesCalled(newCity);
   console.log(newCity);
+  const newURL = createQueryURL(newCity);
+  fetchCityData(newURL);
   //   if the API doesn't return data, don't make a button
 }
 
@@ -42,7 +53,10 @@ function fetchCityData(url) {
     console.log("This is the first resp", resp);
     const cityData = parseResp(resp);
     console.log("CityData in da house");
+    //change this next line to your UV Index function instead of drawPage()
+    //have it take cityData as an arg
     drawPage(cityData);
+    //
   });
 }
 
@@ -79,8 +93,19 @@ function parseResp(resp) {
   return weatherObj;
 }
 
-function uvIndex() {
-  // `https://api.openweathermap.org/data/2.5/uvi?lat=37.75&lon=-122.37`+API KEY
+function uvIndex(cityData) {
+  //const url = createUVQueryUrl(cityData.day0.coordinates.lat, cityData.day0.coordinates.lon)
+  //this function above takes 2 arguments  ^^
+
+  $.ajax({
+    url: url,
+    method: "GET",
+  }).then((resp) => {
+    //add UV index from the response to cityData.day0.uvIndex = resp.uvIndex
+    //finally, call drawPage(cityData) and delete the drawPage call above
+  });
+  //this ajax call will work just like the ajax call above
+  // `https://api.openweathermap.org/data/2.5/uvi?lat=37.75&lon=-122.37`+API KEY     <-- pop this URL out into its own function like the other URL
 }
 
 // Draws the page
@@ -100,7 +125,7 @@ function drawPage(cityData) {
       "><img>"
   );
   // Display current temp
-  $("#temp").text("Temperature: " + cityData.day0.temperature + " F");
+  $("#temp").text("Temperature: " + cityData.day0.temperature + " °F");
   // Display current humidity
   $("#humidity").text("Humidity: " + cityData.day0.humidity + "%");
   // Display current wind speed
@@ -108,18 +133,20 @@ function drawPage(cityData) {
 
   // Five Day Forecast Cards
   const cardRow = $("#forecastCards");
+  let forecastCardTemplate = "";
+
   for (i = 1; i < 6; i++) {
-    // currentDate += numberofsecondsinday
-    const iconSrc = `https://openweathermap.org/img/wn/${cityData[`day${i}`]icon}@2x.png`;
+    const nextDay = new Date(currentDate);
+    nextDay.setDate(currentDate.getDate() + i);
+
+    const iconSrc = `https://openweathermap.org/img/wn/${
+      cityData[`day${i}`].icon
+    }@2x.png`;
     const temp = cityData[`day${i}`].temperature;
-    const forecastCardTemplate = `<div class="card" style="width: 9rem;">
-    <div class="card-body">
-      <div class="card-title" id="forecastDate">Future Date</div>
-      <img id="forecastIcon" src="https://openweathermap.org/img/wn/10d@2x.png"><img>
-      <div class="card-text" id="forecastTemp">Temp</div>
-      <div class="card-text" id="forecastHumidity">Humdity</div>
-    </div>`;
+    const humidity = cityData[`day${i}`].humidity;
+    forecastCardTemplate += `<div class="card" style="width: 9rem;"><div class="card-body"><div class="card-title">${nextDay.toLocaleDateString()}</div><img id="forecastIcon" src=${iconSrc}><img><div class="card-text">Temp: ${temp} °F</div><div class="card-text">Humidity: ${humidity}%</div></div></div>`;
   }
+  cardRow.html(forecastCardTemplate);
 }
 
 $("#searchButton").on("click", () => {
@@ -127,6 +154,23 @@ $("#searchButton").on("click", () => {
   searchCity();
 });
 function generateNewBtn() {}
+
+function updatePreviousCitiesCalled(newCity) {
+  // get local storage and parse the string to usable JSON
+  // if the local storage array is 8 items long, remove the last item
+  // add newCity to the front (index 0) of the array
+  // store all that in local storage
+  // pass that array into a function that draws the city buttons
+}
+
+function drawCityButtons(cityNamesArr) {
+  let cityNamesButtonsHTML = "";
+  cityNamesArr.forEach((cityName) => {
+    // do some templating here
+    // add that templating to cityNamesButtonsHTML
+  });
+  // add cityNamesButtonsHTML to the div with the right ID on the page
+}
 
 main();
 
