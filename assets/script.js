@@ -157,10 +157,10 @@ function drawPage(cityData) {
     if (cityData.day0.uvInd <= 5) {
       $("#badge-id").attr("class", "badge-warning");
     }
-    if (cityData.day0.uvInd >= 6 && cityData.day0.uvInd <= 7) {
+    if (cityData.day0.uvInd >= 6 && cityData.day0.uvInd < 7) {
       $("#badge-id").attr("class", "badge-orange");
     }
-    if (cityData.day0.uvInd >= 8 && cityData.day0.uvInd <= 10) {
+    if (cityData.day0.uvInd >= 8 && cityData.day0.uvInd < 11) {
       $("#badge-id").attr("class", "badge-danger");
     }
     if (cityData.day0.uvInd >= 11) {
