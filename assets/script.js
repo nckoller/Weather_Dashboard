@@ -194,27 +194,22 @@ $("#searchButton").on("click", () => {
 });
 
 function updatePreviousCitiesCalled(newCity) {
-  const previousCitiesArr = fetchLocalStorage();
-  previousCitiesArr.unshift(newCity);
-  console.log("New city added?", previousCitiesArr);
-  setLocalStorage(JSON.stringify(previousCitiesArr));
   // get local storage and parse the string to usable JSON
-
+  const previousCitiesArr = fetchLocalStorage();
   // add newCity to the front (index 0) of the array
-  // store all that in local storage
+  previousCitiesArr.unshift(newCity);
+  // store in local storage
+  setLocalStorage(JSON.stringify(previousCitiesArr));
   // pass that array into a function that draws the city buttons
   drawCityButtons(previousCitiesArr);
 }
 
 function drawCityButtons(previousCitiesArr) {
   let cityNamesButtonsHTML = "";
-  console.log("what am I?***", previousCitiesArr, typeof previousCitiesArr);
+
   previousCitiesArr.forEach((city) => {
-    // do some templating here
-    // cityNamesButtonsHTML += ;
     cityNamesButtonsHTML += `<button type="button" class="btn-group-vertical city-button">${city}</button>`;
   });
-  // add that templating to cityNamesButtonsHTML
 
   // add cityNamesButtonsHTML to the div with the right ID on the page
   $("#previous-cities-called").html(cityNamesButtonsHTML);
@@ -226,6 +221,3 @@ function drawCityButtons(previousCitiesArr) {
 }
 
 main();
-
-//   UV Index Number
-// weatherObj.UV = api.openweathermap.org/data/2.5/uvi?lat=37.75&lon=-122.37
