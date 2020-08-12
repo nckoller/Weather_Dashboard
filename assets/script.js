@@ -87,7 +87,7 @@ function uvIndex() {
 function drawPage(cityData) {
   const currentDate = new Date();
   console.log("In drawPage", cityData);
-  const iconURL = `http://openweathermap.org/img/wn/${cityData.day0.icon}@2x.png`;
+  const iconURL = `https://openweathermap.org/img/wn/${cityData.day0.icon}@2x.png`;
   // Heading for City and Date
   $("#currentForecast").html(
     "<h1>" +
@@ -110,12 +110,12 @@ function drawPage(cityData) {
   const cardRow = $("#forecastCards");
   for (i = 1; i < 6; i++) {
     // currentDate += numberofsecondsinday
-    const iconSrc = `http://openweathermap.org/img/wn/${cityData[`day${i}`]icon}@2x.png`;
+    const iconSrc = `https://openweathermap.org/img/wn/${cityData[`day${i}`]icon}@2x.png`;
     const temp = cityData[`day${i}`].temperature;
     const forecastCardTemplate = `<div class="card" style="width: 9rem;">
     <div class="card-body">
       <div class="card-title" id="forecastDate">Future Date</div>
-      <img id="forecastIcon" src="http://openweathermap.org/img/wn/10d@2x.png"><img>
+      <img id="forecastIcon" src="https://openweathermap.org/img/wn/10d@2x.png"><img>
       <div class="card-text" id="forecastTemp">Temp</div>
       <div class="card-text" id="forecastHumidity">Humdity</div>
     </div>`;
