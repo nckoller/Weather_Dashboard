@@ -9,8 +9,7 @@
       integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z"
       crossorigin="anonymous"
     />
-
-    <style src="./assets/style.css"></style>
+    <link rel= "stylesheet" href="./assets/style.css"></link>
     <title>
       Weather Dashboard
     </title>
@@ -44,19 +43,19 @@
           </div>
           <!-- end search row -->
           <div class="row" id="previous-cities-called">
-            <button class="btn-group-vertical city-button">Minneapolis</button>
+            <!-- <button class="btn-group-vertical city-button">Minneapolis</button> -->
           </div>
         </div>
         <!-- end left sidebar -->
-        <div class="col-8">
+        <div class="col-8" id="main-content">
           <div id="currentForecast">City & Current Date & Icon</div>
           <div id="temp">Test Temp</div>
           <div id="humidity">Test Humidity</div>
           <div id="wind">Test Windspeed</div>
           <div id="uv">Test UV</div>
           <div class="row">
-            <div id="fiveDayCards">
-              <h2>5 day forecast:</h2>
+            <div >
+              <h2 id="fiveDayCards">5-Day Forecast:</h2>
               <div class="row" id="forecastCards"></div>
             </div>
           </div>

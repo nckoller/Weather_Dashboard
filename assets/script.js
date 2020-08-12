@@ -47,6 +47,11 @@ function searchCity(e) {
   fetchCityData(newURL);
 }
 
+function searchPreviousCity(city) {
+  const newURL = createQueryURL(city);
+  fetchCityData(newURL);
+}
+
 function fetchCityData(url) {
   console.log(url);
   $.ajax({
@@ -56,11 +61,8 @@ function fetchCityData(url) {
     console.log("This is the first resp", resp);
     const cityData = parseResp(resp);
     console.log("CityData in da house");
-    //change this next line to your UV Index function instead of drawPage()
-    //have it take cityData as an arg
+
     uvIndex(cityData);
-    // drawPage(cityData);
-    //
   });
 }
 
@@ -145,7 +147,27 @@ function drawPage(cityData) {
   // Display current wind speed
   $("#wind").text("Wind Speed: " + cityData.day0.windSpeed + " MPH");
   // Display UV index
-  $("#uv").text("UV Index: " + cityData.day0.uvInd);
+  $("#uv").html(
+    '<div>UV Index: <span id="badge-id" class="badge">' +
+      cityData.day0.uvInd +
+      "</span></div>"
+  );
+
+  function addUVcolor(UV) {
+    if (cityData.day0.uvInd <= 5) {
+      $("#badge-id").attr("class", "badge-warning");
+    }
+    if (cityData.day0.uvInd >= 6 && cityData.day0.uvInd <= 7) {
+      $("#badge-id").attr("class", "badge-orange");
+    }
+    if (cityData.day0.uvInd >= 8 && cityData.day0.uvInd <= 10) {
+      $("#badge-id").attr("class", "badge-danger");
+    }
+    if (cityData.day0.uvInd >= 11) {
+      $("#badge-id").attr("class", "badge-purple");
+    }
+  }
+  addUVcolor(cityData.day0.uvInd);
 
   // Five Day Forecast Cards
   const cardRow = $("#forecastCards");
@@ -190,12 +212,17 @@ function drawCityButtons(previousCitiesArr) {
   previousCitiesArr.forEach((city) => {
     // do some templating here
     // cityNamesButtonsHTML += ;
-    cityNamesButtonsHTML += `<button class="btn-group-vertical city-button">${city}</button>`;
+    cityNamesButtonsHTML += `<button type="button" class="btn-group-vertical city-button">${city}</button>`;
   });
   // add that templating to cityNamesButtonsHTML
 
   // add cityNamesButtonsHTML to the div with the right ID on the page
   $("#previous-cities-called").html(cityNamesButtonsHTML);
+  // CLICK EVENT FOR CITY BUTTONS
+  $(".btn-group-vertical").on("click", (e) => {
+    let city = e.target.innerText;
+    searchPreviousCity(city);
+  });
 }
 
 main();
