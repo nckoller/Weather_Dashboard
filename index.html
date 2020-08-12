@@ -9,12 +9,6 @@
       integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z"
       crossorigin="anonymous"
     />
-    <link
-      rel="stylesheet"
-      href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
-      integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf"
-      crossorigin="anonymous"
-    />
 
     <style src="./assets/style.css"></style>
     <title>
@@ -25,12 +19,12 @@
     <header>
       <nav class="navbar navbar-light bg-light">
         <span class="navbar-brand mb-0 h1">Weather Dashboard</span>
-        <!-- <i class="fa fa-sun-o" aria-hidden="true"></i> -->
       </nav>
     </header>
     <div class="container">
       <div class="row">
         <div class="col-4">
+          <!-- Search row starts/left sidebar -->
           <div class="row">
             <div class="input-group mb-3">
               <input
@@ -50,7 +44,7 @@
           </div>
           <!-- end search row -->
           <div class="row" id="previous-cities-called">
-            <button class="btn-group-vertical">Minneapolis</button>
+            <button class="btn-group-vertical city-button">Minneapolis</button>
           </div>
         </div>
         <!-- end left sidebar -->
@@ -62,7 +56,7 @@
           <div id="uv">Test UV</div>
           <div class="row">
             <div id="fiveDayCards">
-              5 day forecast cards
+              <h2>5 day forecast:</h2>
               <div class="row" id="forecastCards"></div>
             </div>
           </div>

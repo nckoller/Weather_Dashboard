@@ -2,21 +2,27 @@ const apiKey = "3e4d6f614ff0f8ef33d65fe860319afd";
 
 // DRAW THE PAGE
 function main() {
-  // set LocalStorage var = const
+  // Calls last searched city from local storage
   const previousCitiesArr = fetchLocalStorage();
 
   const cityName = previousCitiesArr[0];
+  drawCityButtons(previousCitiesArr);
   // call weather API
   const queryURL = createQueryURL(cityName);
   fetchCityData(queryURL);
-  // parse the data
-
-  // display the data
 }
 
 // RETRIEVES LAST CITY THAT WAS SEARCHED
 function fetchLocalStorage() {
-  const previousCitiesArr = JSON.parse(localStorage.getItem("previousCities"));
+  const previousCitiesString = JSON.parse(
+    localStorage.getItem("previousCities")
+  );
+  const previousCitiesArr = JSON.parse(previousCitiesString);
+  console.log(
+    "in local storage fetch",
+    typeof previousCitiesArr,
+    previousCitiesArr
+  );
   if (!previousCitiesArr) {
     return ["Minneapolis"];
   } else {
@@ -24,13 +30,14 @@ function fetchLocalStorage() {
   }
 }
 
-function setLocalStorage() {
-  localStorage.setItem("previousCities", JSON.stringify(newCity));
+function setLocalStorage(previousCitiesArr) {
+  localStorage.setItem("previousCities", JSON.stringify(previousCitiesArr));
 }
 
 // RETRIEVES INPUT FROM THE SEARCH BAR
 function searchCity(e) {
   const newCity = $("#searchInput").val();
+  // If the search button is clicked with no text, return
   if (newCity === "") {
     return;
   }
@@ -38,11 +45,7 @@ function searchCity(e) {
   console.log(newCity);
   const newURL = createQueryURL(newCity);
   fetchCityData(newURL);
-  //   if the API doesn't return data, don't make a button
 }
-
-// theFunctionForCallingAPI (cityName) {
-// }
 
 function fetchCityData(url) {
   console.log(url);
@@ -55,7 +58,8 @@ function fetchCityData(url) {
     console.log("CityData in da house");
     //change this next line to your UV Index function instead of drawPage()
     //have it take cityData as an arg
-    drawPage(cityData);
+    uvIndex(cityData);
+    // drawPage(cityData);
     //
   });
 }
@@ -93,20 +97,30 @@ function parseResp(resp) {
   return weatherObj;
 }
 
+// SECOND API CALL FOR UV INDEX VALUE
 function uvIndex(cityData) {
-  //const url = createUVQueryUrl(cityData.day0.coordinates.lat, cityData.day0.coordinates.lon)
+  const url = createUVQueryUrl(
+    cityData.day0.coordinates.lat,
+    cityData.day0.coordinates.lon
+  );
   //this function above takes 2 arguments  ^^
 
   $.ajax({
     url: url,
     method: "GET",
   }).then((resp) => {
-    //add UV index from the response to cityData.day0.uvIndex = resp.uvIndex
-    //finally, call drawPage(cityData) and delete the drawPage call above
+    // adds UV Index value to cityData object
+    cityData.day0.uvInd = resp.value;
+
+    drawPage(cityData);
   });
-  //this ajax call will work just like the ajax call above
-  // `https://api.openweathermap.org/data/2.5/uvi?lat=37.75&lon=-122.37`+API KEY     <-- pop this URL out into its own function like the other URL
 }
+
+function createUVQueryUrl(lat, lon) {
+  return `https://api.openweathermap.org/data/2.5/uvi?lat=${lat}&lon=${lon}&appid=${apiKey}`;
+}
+
+// window.uvIndex = uvIndex;
 
 // Draws the page
 function drawPage(cityData) {
@@ -130,6 +144,8 @@ function drawPage(cityData) {
   $("#humidity").text("Humidity: " + cityData.day0.humidity + "%");
   // Display current wind speed
   $("#wind").text("Wind Speed: " + cityData.day0.windSpeed + " MPH");
+  // Display UV index
+  $("#uv").text("UV Index: " + cityData.day0.uvInd);
 
   // Five Day Forecast Cards
   const cardRow = $("#forecastCards");
@@ -149,27 +165,37 @@ function drawPage(cityData) {
   cardRow.html(forecastCardTemplate);
 }
 
+// CLICK EVENT FOR SEARCH BUTTON
 $("#searchButton").on("click", () => {
   console.log("CLICK");
   searchCity();
 });
-function generateNewBtn() {}
 
 function updatePreviousCitiesCalled(newCity) {
+  const previousCitiesArr = fetchLocalStorage();
+  previousCitiesArr.unshift(newCity);
+  console.log("New city added?", previousCitiesArr);
+  setLocalStorage(JSON.stringify(previousCitiesArr));
   // get local storage and parse the string to usable JSON
-  // if the local storage array is 8 items long, remove the last item
+
   // add newCity to the front (index 0) of the array
   // store all that in local storage
   // pass that array into a function that draws the city buttons
+  drawCityButtons(previousCitiesArr);
 }
 
-function drawCityButtons(cityNamesArr) {
+function drawCityButtons(previousCitiesArr) {
   let cityNamesButtonsHTML = "";
-  cityNamesArr.forEach((cityName) => {
+  console.log("what am I?***", previousCitiesArr, typeof previousCitiesArr);
+  previousCitiesArr.forEach((city) => {
     // do some templating here
-    // add that templating to cityNamesButtonsHTML
+    // cityNamesButtonsHTML += ;
+    cityNamesButtonsHTML += `<button class="btn-group-vertical city-button">${city}</button>`;
   });
+  // add that templating to cityNamesButtonsHTML
+
   // add cityNamesButtonsHTML to the div with the right ID on the page
+  $("#previous-cities-called").html(cityNamesButtonsHTML);
 }
 
 main();
