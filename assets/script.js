@@ -218,6 +218,7 @@ function drawCityButtons(previousCitiesArr) {
     let city = e.target.innerText;
     searchPreviousCity(city);
   });
+  $("#searchInput").val("");
 }
 
 main();
