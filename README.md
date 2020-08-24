@@ -17,7 +17,7 @@ JavaScript\
 jQuery\
 Bootstrap\
 Moment.js\
-Open Weather API\
+Open Weather API
 
 ## Credits
 
